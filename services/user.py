@@ -1,15 +1,14 @@
+from django.contrib.auth import get_user_model
 from db.models import User
 
 
 def create_user(username: str, password: str, **kwargs) -> User:
-    user = User.objects.create_user(
+    user_model = get_user_model()
+    user = user_model.objects.create_user(
         username=username,
-        password=password
+        password=password,
+        **{k: v for k, v in kwargs.items() if v is not None}
     )
-    for key, value in kwargs.items():
-        if value is not None:
-            setattr(user, key, value)
-    user.save()
     return user
 
 
@@ -18,7 +17,7 @@ def get_user(user_id: int) -> User:
 
 
 def update_user(user_id: int, **kwargs) -> None:
-    user = User.objects.get(id=user_id)
+    user = get_user(user_id)
     if "password" in kwargs:
         user.set_password(kwargs["password"])
     for key, value in kwargs.items():
