@@ -13,7 +13,7 @@ def create_user(username: str, password: str, **kwargs) -> User:
 
 
 def get_user(user_id: int) -> User:
-    return User.objects.get(id=user_id)
+    return get_user_model().objects.get(id=user_id)
 
 
 def update_user(user_id: int, **kwargs) -> None:
